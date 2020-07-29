@@ -1,0 +1,9 @@
+.footer{
+    /*Fixa o componente*/
+    position: fixed;
+    
+    /*Coloca ele no final*/
+    bottom: 0;
+    width: 100%;
+    
+}

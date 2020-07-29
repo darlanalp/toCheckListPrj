@@ -1,0 +1,12 @@
+<!--https://stackblitz.com/edit/angular-8-registration-login-example?file=app%2Fapp.component.html-->
+
+<app-header-inicio  *ngIf="!currentUser" ></app-header-inicio>
+<app-header  *ngIf="currentUser" ></app-header>
+<app-nav  *ngIf="currentUser"></app-nav>
+
+
+<router-outlet  *ngIf="!currentUser"  ></router-outlet>  
+
+<div class="footer">
+    <app-footer></app-footer>  
+</div>

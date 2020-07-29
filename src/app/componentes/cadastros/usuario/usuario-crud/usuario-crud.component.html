@@ -1,0 +1,110 @@
+<form [formGroup]="formUsuario" (ngSubmit)="onSubmit()">
+
+
+<div class="card border-primary mb-3 marginCard ">
+  <div class="card-header text-white bg-secondary ">
+    Cadastro de usuário - {{true == Novo ? ' Novo usuário' : usuario.primeiroNome }} 
+  </div>
+  <div class="card-body pt-4">    
+      <div class="form-group">
+        <label>Primeiro nome</label>
+        <input type="text" id="idprimeiroNome" formControlName="primeiroNome"  [(ngModel)]="usuario.primeiroNome" class="form-control" 
+        [ngClass]="{ 'is-invalid': submitted && f.primeiroNome.errors }" />
+        <div *ngIf="submitted && f.primeiroNome.errors" class="invalid-feedback">
+            <div *ngIf="f.primeiroNome.errors.required">Primeiro nome obrigatório</div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+          <label for="sobreNome">Sobrenome</label>
+          <input type="text" class="form-control" name="sobreNome" id="sobreNome" 
+           formControlName="sobreNome"  [(ngModel)]="usuario.sobreNome"
+          [ngClass]="{ 'is-invalid': submitted && f.sobreNome.errors }">
+          <div *ngIf="submitted && f.sobreNome.errors" class="invalid-feedback">
+            <div *ngIf="f.sobreNome.errors.required">SobreNome obrigatório</div>
+          </div>
+      </div>
+    
+      <div class="form-group">
+        <label>Gênero</label>
+        <div *ngIf="submitted && f.genero.errors" class="invalid-feedback">
+          <div *ngIf="f.genero.errors.required">Gênero obrigatório</div>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input"  [(ngModel)]="usuario.genero" type="radio" name="genero" id="masculino" [value]="1" 
+           formControlName="genero"
+           [ngClass]="{ 'is-invalid': submitted && f.genero.errors }">
+          <label class="form-check-label" for="masculino">Masculino</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input"  [(ngModel)]="usuario.genero" type="radio" name="genero" id="feminino" [value]="2"
+          formControlName="genero"
+          [ngClass]="{ 'is-invalid': submitted && f.genero.errors }">
+          <label class="form-check-label" for="feminino">Feminino</label>
+        </div>
+ 
+          
+      </div>
+
+      <div class="form-group">
+          <label for="dataNascimento">Data de nascimento</label>
+          <input type="date" class="form-control"  [(ngModel)]="usuario.dataNascimento" name="dataNascimento" id="iddataNascimento"
+          formControlName="dataNascimento"
+          [ngClass]="{ 'is-invalid': submitted && f.dataNascimento.errors }">
+          <div *ngIf="submitted && f.dataNascimento.errors" class="invalid-feedback">
+            <div *ngIf="f.dataNascimento.errors.required">Data de nascimento</div>
+          </div>
+      </div>
+  
+      <div class="form-group">
+          <label for="funcao">Função</label>
+          <input type="text" class="form-control" name="funcao" id="funcao" required
+          formControlName="funcao" [(ngModel)]="usuario.funcao">
+      </div>
+    
+      <div class="form-group">
+        <label for="observacao">Observação</label>
+        <textarea class="form-control" rows="3" name="observacao" id="observacao"
+        formControlName="observacao" [(ngModel)]="usuario.observacao"></textarea>
+      </div>
+  
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="inativo" id="inativo" 
+               formControlName="inativo" [(ngModel)]="usuario.inativo">
+        <label class="form-check-label" for="inativo" >Inativo</label>
+      </div>     
+      <br>
+      <div class="form-group">
+        <label for="usuario">Usuário</label>
+        <input type="text" class="form-control" id="usuario" aria-describedby="usuarioHelp"
+         formControlName="usuario"  [(ngModel)]="usuario.usuario"
+         [ngClass]="{ 'is-invalid': submitted && f.usuario.errors }">
+        <small id="usuarioHelp" class="form-text text-muted">O acesso ao toCheckList será através do usuário informado aqui</small>
+        
+        <div *ngIf="submitted && f.usuario.errors" class="invalid-feedback">
+          <div *ngIf="f.usuario.errors.required">Usuário obrigatório</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input type="password" class="form-control" id="senha"
+        formControlName="senha"  [(ngModel)]="usuario.senha"
+        [ngClass]="{ 'is-invalid': submitted && f.senha.errors }">
+        <div *ngIf="submitted && f.senha.errors" class="invalid-feedback">
+          <div *ngIf="f.senha.errors.required">Senha obrigatória</div>
+        </div>
+      </div>
+      <div>
+        <input type="submit" class="btn btn-primary mt-4" value="Salvar">
+        <button  class="btn btn-secondary mt-4 ml-2" (click)="cancel()" >
+            Cancelar
+        </button>  
+      </div>
+    
+  </div>
+
+</div>
+
+</form>
+
+     

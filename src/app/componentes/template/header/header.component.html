@@ -1,0 +1,38 @@
+
+<nav class="navbar fixed-top navbar-expand-md navbar-fixed-top navbar-dark bg-dark main-nav">
+    <button type="button"  (click) = "toggleSidebar()" class="btn btn-secondary">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand espaco" href="#">Home</a>
+   
+
+    <div class="container">                                                  
+        <ul class="nav navbar-nav flex-fill w-100 flex-nowrap">
+            <li class="nav-item">
+                <span></span>>
+            </li>                
+        </ul>
+        <!--
+            Este código faz com que mude o fundo da sidebar
+        <a href="#" class="btn btn-secondary" (click)="toggleBackgroundImage()">Toggle Background Image</a>
+        -->    
+        <ul class="nav navbar-nav flex-fill justify-content-center">
+            <li class="nav-item">
+               
+            </li>
+        </ul>
+        <ul class="nav navbar-nav flex-fill w-100 justify-content-end">
+            <li class="nav-item">                                               
+            </li>
+            
+            <li class="nav-item">                                              
+            </li>
+        </ul>        
+    </div>
+    <a href="/" class="navbar-brand d-none d-lg-block espaco"  >
+        <span class="badge badge-warning">Bem-vindo! toCHECKLIST</span>
+    </a>
+    <button type="button" class="btn btn-outline-secondary mb-2"  (click) = "logout()" data-toggle="tooltip" data-placement="bottom" title="Sair da aplicação">
+        <i class="fa fa-power-off"></i>
+    </button>    
+</nav>    

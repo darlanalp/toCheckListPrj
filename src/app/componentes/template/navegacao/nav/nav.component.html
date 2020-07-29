@@ -1,0 +1,11 @@
+
+<app-sidebar [hidden]="getSideBarState()"></app-sidebar> 
+<!--Menu-->
+<div class="page-wrapper" [ngClass]="{'toggled' : getSideBarState()}">        
+    <main class="page-content" >
+        <router-outlet></router-outlet>  
+    </main>
+</div>    
+
+
+

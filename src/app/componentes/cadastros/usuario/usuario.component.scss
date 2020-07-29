@@ -1,0 +1,21 @@
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  th, td {
+    overflow: hidden;
+    width: 150px;
+    text-overflow: Ellipsis;
+    white-space: nowrap;
+  }
+
+.mat-column-inativo {
+    flex: 0 0 100px;
+    width: 50px;    
+}
+
+.mat-column-usuario {
+    flex: 0 0 100px;
+    width: 200px;    
+}

@@ -1,0 +1,58 @@
+
+.espaco{
+    margin-left: 10px;
+  }
+  
+  
+
+  
+  ////////////////////////////////////////////////////
+  // estilo aplicado na classe de menu
+  ////////////////////////////////////////////////////
+  .page-wrapper {
+      padding-top:70px;
+      padding-left:15px;
+      .page-content {
+        display: inline-block;
+        width: 100%;
+        padding-top: 0px;
+        transition: padding-left .3s ease;
+        top: 0;
+  
+        @media screen and (min-width: 768px) {
+          padding-left: 250px;
+        }
+    
+        .overlay {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 998;
+          background: #000;
+          opacity: .5;
+          display: none;
+    
+          &.show {
+    
+            @media screen and (max-width: 768px) {
+              display: block;
+            }
+          }
+        }
+      }
+    
+   
+    
+      &.toggled {
+    
+        .page-content {
+          padding-left: 0;
+        }
+      }
+    
+     
+    }
+    
+    
