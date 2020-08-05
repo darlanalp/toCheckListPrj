@@ -4,7 +4,7 @@ import { AppBootstrapModule } from './app.bootstrap-module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 
 import { HeaderComponent } from './componentes/template/header/header.component';
 import { SidebarComponent } from './componentes/template/menu/sidebar.component';
@@ -37,7 +37,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule, MatFormFieldDefaultOptions} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
 
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './componentes/template/home/home/home.component';
@@ -46,9 +49,14 @@ import { HomeComponent } from './componentes/template/home/home/home.component';
 import { AuthGuard } from './service/auth/auth.guard';
 import { Error404Component } from './componentes/principal/error404/error404.component';
 
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
+};
+
+const appearance: MatFormFieldDefaultOptions = {
+  appearance: 'outline'
 };
 
 @NgModule({
@@ -82,11 +90,23 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatSortModule,
     MatTooltipModule,
     HttpClientModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    FormsModule
   ],
-  providers: [ {
-    provide: PERFECT_SCROLLBAR_CONFIG,
-    useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG},
-    AuthGuard],
+  providers: [ 
+    { 
+      provide: PERFECT_SCROLLBAR_CONFIG, 
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    },
+    AuthGuard,
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: appearance
+    }
+  ],     
   bootstrap: [AppComponent]
 })
 export class AppModule { }

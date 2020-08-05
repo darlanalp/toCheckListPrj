@@ -32,7 +32,6 @@ const routes: Routes = [
     component: UsuarioCrudComponent, /*Indica qual é o componente da rota*/
     canActivate: [AuthGuard]
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: '**', component: Error404Component
   },

@@ -3,8 +3,8 @@ import { Usuario } from './../../componentes/cadastros/Modelos/usuario.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, observable, EMPTY } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, observable, EMPTY, of } from 'rxjs';
+import { map, catchError, switchMap, debounceTime, distinctUntilChanged  } from 'rxjs/operators';
 
 
 @Injectable({
@@ -78,6 +78,26 @@ export class UsuarioService {
     //Concatenando a url para realizar o get do produto
     const url = `${this.api}/${id}`
     return this.http.get<Usuario>(url)
+  }
+
+   pesquisaPorCampo(terms, campo:string) : Observable<Usuario[]>{
+     console.log(terms);
+     console.log(campo);
+     
+    return terms.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(term => {
+          //_like=^ => consulta considerando que comece com
+          const url = `${this.api}?${campo}_like=${term}`
+          console.log(url);
+          return this.http.get(url);
+      }),
+      catchError((error: any) => {
+           console.error(error);
+           return of();
+      }),
+    );
   }
 
   errorHandler(e: any): Observable<any>{

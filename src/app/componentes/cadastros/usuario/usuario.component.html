@@ -7,28 +7,36 @@
 
     Todas essas novas divs têm a classe row, para garantir que irão ficar uma abaixo da outra.
 -->
+
+
 <div id="main" class="container-fluid">
-    <div id="top" class="row">
+    <div id="top" class="row">        
         <div class="col-md-3">
-            <h2>Usuários</h2>
-        </div>
-     
-        <div class="col-md-6">
-            <div class="input-group h2">
-                <input name="data[search]" class="form-control" id="search" type="text" placeholder="Pesquisar usuario">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fa fa-search"></i> 
-                </button>
-            </div>
-        </div>
-     
-        <div class="col-md-3">
-            <button routerLink="/usuarioCRUD/Novo" class="btn btn-primary" type="submit"  >                        
-                <i class="fa fa-user fa-fw"></i> 
-                Novo usuário
-            </button>
+      
         </div>
     </div> <!-- /#top -->
+
+    <div fxLayout="row" fxLayoutAlign="space-around center">
+      <button routerLink="/usuarioCRUD/Novo" class="btn btn-primary" type="submit"  >                        
+        <i class="fa fa-user fa-fw"></i> 
+        Novo usuário
+      </button>
+
+      <mat-form-field> 
+        <mat-select placeholder="Pequisar pelo campo" [formControl]="pesquisaControl">
+            <mat-option *ngFor="let campo of camposPesquisa"
+                        [value]="campo.nome"
+                        (click)="setaCampoPesquisar(campo.nome)">{{campo.descricao}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field id="pesquisaPorCampo">
+        <input #inputPesquisa matInput (keyup)="pesquisaTerm$.next($event.target.value)" placeholder="digite a informação">
+          <mat-hint align="center">Digite pelo menos as 3 primeiras letras.</mat-hint>
+      </mat-form-field>
+    </div>
+
     <!--Visualização dos registros cadastrados-->
     <div class="mat-elevation-z8">
         <table mat-table class="full-width-table" matSort aria-label="Elements">
