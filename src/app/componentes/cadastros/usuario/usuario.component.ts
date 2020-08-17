@@ -1,3 +1,4 @@
+import { strict } from 'assert';
 import { campo } from './../Modelos/pesquisa.model';
 import { UsuarioDatasource } from './usuario-datasource';
 import { Usuario } from './../Modelos/usuario.model';
@@ -11,7 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import {map, startWith} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, empty} from 'rxjs';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -38,6 +39,9 @@ export class UsuarioComponent implements OnInit {
   public camposPesquisa  = Usuario.DisplayedColumnsCaption();
   public pesquisaControl = new FormControl('');
   public pesquisaTerm$ = new Subject<string>();
+  public informacaoPesquisar : string;
+  public showErroInfoPesquisar : boolean;
+  public mesageErroPesquisa : string;
 
   constructor(private modalService: BsModalService,
               private usuarioService : UsuarioService,
@@ -48,19 +52,45 @@ export class UsuarioComponent implements OnInit {
 
   
 
-  public setaCampoPesquisar(campo : campo): any {
+  pesquisar():void{
+   
+    if(this.pesquisaControl.value == undefined ||
+      this.pesquisaControl.value == ''){
+         
+      this.mesageErroPesquisa = 'Selecione por qual informação deseja pesquisar ';
+      this.showErroInfoPesquisar = true
+      return;
+    }
+
+    if(this.informacaoPesquisar == undefined ||
+       this.informacaoPesquisar == ''){
+
+      this.mesageErroPesquisa = 'Preencha alguma informação para ser pesquisada';
+      this.showErroInfoPesquisar = true
+      this.someInput.nativeElement.focus();
+      return;
+    }
+    
+    this.showErroInfoPesquisar = false
+    this.pesquisaTerm$.next(this.informacaoPesquisar)
 
     this.usuarioService.pesquisaPorCampo(this.pesquisaTerm$, this.pesquisaControl.value)
     .subscribe(data => {
-
-       this.dataLength = data.length;
-       this.dataSource = new UsuarioDatasource(data); 
-       this.dataSource.sort = this.sort;
-       this.dataSource.paginator = this.paginator;
-       this.table.dataSource = this.dataSource;  
-       
-       console.log(data);
+  
+         this.dataLength = data.length;
+         this.dataSource = new UsuarioDatasource(data); 
+         this.dataSource.sort = this.sort;
+         this.dataSource.paginator = this.paginator;
+         this.table.dataSource = this.dataSource;    
+         
     });
+      
+    
+    
+  }
+
+   
+  public setaCampoPesquisar(campo : campo): any {
 
     this.someInput.nativeElement.focus();
   }

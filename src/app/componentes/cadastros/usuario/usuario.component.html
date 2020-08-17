@@ -7,23 +7,15 @@
 
     Todas essas novas divs têm a classe row, para garantir que irão ficar uma abaixo da outra.
 -->
-
+<div class="card text-white bg-secondary mb-3" >
+  <div class="card-header">Usuários</div>  
+</div>
 
 <div id="main" class="container-fluid">
-    <div id="top" class="row">        
-        <div class="col-md-3">
-      
-        </div>
-    </div> <!-- /#top -->
-
-    <div fxLayout="row" fxLayoutAlign="space-around center">
-      <button routerLink="/usuarioCRUD/Novo" class="btn btn-primary" type="submit"  >                        
-        <i class="fa fa-user fa-fw"></i> 
-        Novo usuário
-      </button>
-
-      <mat-form-field> 
-        <mat-select placeholder="Pequisar pelo campo" [formControl]="pesquisaControl">
+    <div id="top" >                    
+      <mat-form-field class="espacoCampoPesquisa"> 
+        <mat-label>Pequisar por</mat-label>
+        <mat-select placeholder="Pequisar por" [formControl]="pesquisaControl">
             <mat-option *ngFor="let campo of camposPesquisa"
                         [value]="campo.nome"
                         (click)="setaCampoPesquisar(campo.nome)">{{campo.descricao}}
@@ -31,11 +23,24 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field id="pesquisaPorCampo">
-        <input #inputPesquisa matInput (keyup)="pesquisaTerm$.next($event.target.value)" placeholder="digite a informação">
-          <mat-hint align="center">Digite pelo menos as 3 primeiras letras.</mat-hint>
+      <mat-form-field id="pesquisaPorCampo" class="informcaoPesquisa">
+        <mat-label>Informação</mat-label>
+        <input #inputPesquisa matInput 
+               placeholder="digite a informação"
+               [(ngModel)]="informacaoPesquisar">              
       </mat-form-field>
-    </div>
+
+      <button type="button" class="btn btn-warning btn-space"
+              (click)="pesquisar()">        
+        <i class="fa fa-search fa-fw"></i> 
+        Buscar
+      </button>
+      <button routerLink="/usuarioCRUD/Novo" class="btn btn-dark btn-space" type="submit"  >                        
+        <i class="fa fa-user fa-fw"></i> 
+        Novo usuário
+      </button>
+      <div *ngIf="showErroInfoPesquisar" class="alert alert-danger">{{mesageErroPesquisa}}</div>
+    </div> <!-- /#top -->
 
     <!--Visualização dos registros cadastrados-->
     <div class="mat-elevation-z8">
