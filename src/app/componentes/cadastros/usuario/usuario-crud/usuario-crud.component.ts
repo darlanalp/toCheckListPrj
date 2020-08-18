@@ -49,13 +49,14 @@ export class UsuarioCrudComponent implements OnInit {
     if(id == null || id == 0){
 
        this.Novo = true;   
+       this.usuarioService.usuarioEdicao = null;
     }
     else{
 
         this.usuarioService.readById(id).subscribe( usuario => {
         this.usuario = usuario;     
         this.Novo = false;
-
+        this.usuarioService.usuarioEdicao = usuario;
       })      
       
     }

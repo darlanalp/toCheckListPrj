@@ -1,9 +1,8 @@
-import { strict } from 'assert';
 import { campo } from './../Modelos/pesquisa.model';
 import { UsuarioDatasource } from './usuario-datasource';
 import { Usuario } from './../Modelos/usuario.model';
 import { UsuarioService } from './../../../service/cadastros/usuario.service';
-import { Component, OnInit, TemplateRef,  ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, TemplateRef,  ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -11,8 +10,6 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import {map, startWith} from 'rxjs/operators';
-import {Observable, Subject, empty} from 'rxjs';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -20,7 +17,7 @@ import {FormControl} from '@angular/forms';
   templateUrl: './usuario.component.html',
   styleUrls: ['./usuario.component.scss']
 })
-export class UsuarioComponent implements OnInit {
+export class UsuarioComponent implements OnInit, AfterViewInit {
 
   modalRef: BsModalRef;
   messageConfirmacaoExclusao: string;
@@ -38,9 +35,8 @@ export class UsuarioComponent implements OnInit {
   
   public camposPesquisa  = Usuario.DisplayedColumnsCaption();
   public pesquisaControl = new FormControl('');
-  public pesquisaTerm$ = new Subject<string>();
   public informacaoPesquisar : string;
-  public showErroInfoPesquisar : boolean;
+
   public mesageErroPesquisa : string;
 
   constructor(private modalService: BsModalService,
@@ -50,52 +46,59 @@ export class UsuarioComponent implements OnInit {
 
   }
 
+  public showErroInfoPesquisar():boolean{
+    return !(this.mesageErroPesquisa == '' || this.mesageErroPesquisa == undefined);
+  }
   
 
-  pesquisar():void{
+  pesquisar():void{   
+    this.pesquisarRegistro(this.pesquisaControl.value, this.informacaoPesquisar);              
+  }
+
+  pesquisarRegistro(campo:string, informacao:string):void{
    
-    if(this.pesquisaControl.value == undefined ||
-      this.pesquisaControl.value == ''){
+    if(campo == undefined || campo == ''){
          
       this.mesageErroPesquisa = 'Selecione por qual informação deseja pesquisar ';
-      this.showErroInfoPesquisar = true
       return;
     }
 
-    if(this.informacaoPesquisar == undefined ||
-       this.informacaoPesquisar == ''){
+    if(informacao == undefined || informacao == ''){
 
-      this.mesageErroPesquisa = 'Preencha alguma informação para ser pesquisada';
-      this.showErroInfoPesquisar = true
+      this.mesageErroPesquisa = 'Preencha alguma informação para ser pesquisada';      
       this.someInput.nativeElement.focus();
       return;
     }
-    
-    this.showErroInfoPesquisar = false
-    this.pesquisaTerm$.next(this.informacaoPesquisar)
 
-    this.usuarioService.pesquisaPorCampo(this.pesquisaTerm$, this.pesquisaControl.value)
+    
+    this.usuarioService.pesquisaPorCampo(campo, informacao)
     .subscribe(data => {
-  
-         this.dataLength = data.length;
-         this.dataSource = new UsuarioDatasource(data); 
-         this.dataSource.sort = this.sort;
-         this.dataSource.paginator = this.paginator;
-         this.table.dataSource = this.dataSource;    
-         
+
+      this.mesageErroPesquisa = '';
+
+       this.refreshData(data);   
+       this.usuarioService.filtroCarreado = data;
+
+       if(data.length == 0)
+          this.mesageErroPesquisa = 'Não foi encontrado nenhum registro com a informação pesquisada!';
     });
-      
-    
-    
+              
   }
 
-   
   public setaCampoPesquisar(campo : campo): any {
 
     this.someInput.nativeElement.focus();
   }
 
-
+  public refreshData(data : Usuario[]){
+       
+    this.dataSource = new UsuarioDatasource(data); 
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.table.dataSource = this.dataSource;    
+    this.dataLength = data.length;         
+  }
+   
 
 
   idUsuarioExcluir  : number;
@@ -125,36 +128,29 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.delete(this.idUsuarioExcluir).subscribe( () => {
 
       this.usuarioService.showMessage('Usuário excluido com sucesso')
-      this.readVisao();
-    })
-    
+      this.refreshData(this.usuarioService.filtroCarreado);      
+    })    
   }
 
-  readVisao() : void{
-
-    //Carrega as informações cadastradas
-    this.usuarioService.readView().subscribe( usuarios =>{
-
-    this.dataSource = new UsuarioDatasource(usuarios); 
-
-        //Faz o binding com os componentes da table
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        this.table.dataSource = this.dataSource;      
-      
-    })
-
-  }
 
   ngOnInit(): void {
 
-    this.readVisao();
-
-
+ 
   }
 
-  displayedColumns =  Usuario.DisplayedPropriedadeColumns();
-    
+  ngAfterViewInit():void{
+        
+    if(this.usuarioService.filtroCarreado != null){
 
+      this.usuarioService.viewFiltroCarregado()
+      .subscribe(usuariosFiltro => {
+      
+        this.refreshData(usuariosFiltro);  
+       });         
+    }
+            
+  }
+
+  displayedColumns =  Usuario.DisplayedPropriedadeColumns();    
 
 }

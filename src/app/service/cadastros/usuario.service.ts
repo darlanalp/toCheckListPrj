@@ -3,7 +3,7 @@ import { Usuario } from './../../componentes/cadastros/Modelos/usuario.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, observable, EMPTY, of } from 'rxjs';
+import { Observable, observable, EMPTY, of, empty } from 'rxjs';
 import { map, catchError, switchMap, debounceTime, distinctUntilChanged  } from 'rxjs/operators';
 
 
@@ -17,6 +17,40 @@ export class UsuarioService {
 
   api = environment.baseUrl + "usuarios";
 
+  public usuarioEdicao : Usuario;
+  filtroCarreado: Usuario[];
+
+  viewFiltroCarregado() : Observable<Usuario[]>{
+
+    return new Observable<Usuario[]>(observador => {
+      observador.next(this.filtroCarreado)      
+    });
+    
+  }
+  
+  addFiltroCarregado(u : Usuario){
+    if(this.filtroCarreado!= null)
+    {    
+      //Se achou remove
+      var indice = this.filtroCarreado.findIndex(obj => obj.id == u.id);
+      if(indice >= 0)
+         this.filtroCarreado.splice(indice, 1);
+
+      //Adiciona o atualizado
+      this.filtroCarreado.push(u);
+    }
+  }
+
+  
+  removeFiltroCarregado(id:number){
+    if(this.filtroCarreado!= null)
+    {    
+      //Se achou remove
+      var indice = this.filtroCarreado.findIndex(obj => obj.id == id);
+      if(indice >= 0)
+         this.filtroCarreado.splice(indice, 1);
+    }
+  }
   showMessage(msg: string, isError: boolean= false): void{
 
     //Configuração e apresentação do snackBar do pacote do material
@@ -32,9 +66,13 @@ export class UsuarioService {
 
     return this.http.post<Usuario>(this.api,usuario).pipe(
 
-      map(obj => obj),
+      map(obj => {
+        this.addFiltroCarregado(obj);
+        return obj;
+      }),
       catchError(e => this.errorHandler(e))
 
+      
     );
   }
 
@@ -43,7 +81,10 @@ export class UsuarioService {
     const url = `${this.api}/${usuario.id}`
     return this.http.put<Usuario>(url, usuario).pipe(
 
-      map(obj => obj),
+      map(obj => {
+          this.addFiltroCarregado(obj);
+          return  obj;
+      }),
       catchError(e => this.errorHandler(e))
 
     )    
@@ -67,7 +108,10 @@ export class UsuarioService {
     const url = `${this.api}/${id}`
     return this.http.delete<Usuario>(url).pipe(
 
-      map(obj => obj),
+      map(obj => { 
+        this.removeFiltroCarregado(id);
+        return obj
+      }),
       catchError(e => this.errorHandler(e))
 
     )
@@ -80,6 +124,20 @@ export class UsuarioService {
     return this.http.get<Usuario>(url)
   }
 
+  pesquisaPorCampo(campo:string, informacao : string) : Observable<Usuario[]>{
+      
+    //_like=^ => consulta considerando que comece com
+    const url = `${this.api}?${campo}_like=${informacao}`
+
+    return this.http.get<Usuario[]>(url).pipe(
+
+      map(obj => obj),
+      catchError(e => this.errorHandler(e))
+
+    ); // retorna um observable de usuario
+ }
+
+/*
    pesquisaPorCampo(terms, campo:string) : Observable<Usuario[]>{
      console.log(terms);
      console.log(campo);
@@ -99,7 +157,7 @@ export class UsuarioService {
       }),
     );
   }
-
+*/
   errorHandler(e: any): Observable<any>{
 
     this.showMessage('Erro ao salvar o usuário '+e.message, true);
