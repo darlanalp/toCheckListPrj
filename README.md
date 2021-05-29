@@ -2,7 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
-Plataforma de gerenciamento de CheckList
+Plataforma de gerenciamento de CheckList (Ainda em desenvolvimento)
 
 ## Development server
 
